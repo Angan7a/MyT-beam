@@ -5,11 +5,10 @@
 
 #include "Screen.h"
 #include "axp20x.h"
-#define PMU_IRQ             35
-AXP20X_Class axp;
-bool pmu_irq = false;
-String baChStatus = "No charging";
+#include "config.h"
+#include "I2C.h"
 
+I2C i2c{};
 	Screen screen{};
 bool ssd1306_found = false;
 bool axp192_found = false;
@@ -19,11 +18,13 @@ bool axp192_found = false;
 void setup() {
 	Serial.begin(115200);
 	delay(1000);
-	Wire.begin(I2C_SDA, I2C_SCL);
 
+	i2c.scanDevices();
+	i2c.setAxp192();
 	screen.init();
 }
 void loop() {
+	i2c.ss();
 	screen.loop();	
 	delay(90);
 }

@@ -36,13 +36,15 @@ void Screen::init()
 #endif
 }
 
+String Screen::batStatus = "None";
+
 void Screen::msOverlay(OLEDDisplay *display, OLEDDisplayUiState *state)
 {
     static char volbuffer[128];
     display->setTextAlignment(TEXT_ALIGN_LEFT);
     display->setFont(ArialMT_Plain_10);
 
-    display->drawString(0, 0, "baChStatus");
+    display->drawString(0, 0, batStatus);
 
    // if (axp.isBatteryConnect()) {
    //     snprintf(volbuffer, sizeof(volbuffer), "%.2fV/%.2fmA", axp.getBattVoltage() / 1000.0, axp.isChargeing() ? axp.getBattChargeCurrent() : axp.getBattDischargeCurrent());

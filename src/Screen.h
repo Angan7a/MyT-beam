@@ -18,6 +18,8 @@ class Screen {
 	static void msOverlay(OLEDDisplay *display, OLEDDisplayUiState *state);
 public:
 
+	static String batStatus;
+
 	Screen();
 
 	void init();
