@@ -9,7 +9,9 @@
 #include "I2C.h"
 
 I2C i2c{};
-	Screen screen{};
+
+std::shared_ptr<Observer> screen = std::make_shared<Screen> ();
+
 bool ssd1306_found = false;
 bool axp192_found = false;
 //#define AXP192_SLAVE_ADDRESS    0x34
@@ -21,11 +23,11 @@ void setup() {
 
 	i2c.scanDevices();
 	i2c.setAxp192();
-	screen.init();
+	screen->init();
 }
 void loop() {
-	i2c.ss();
-	screen.loop();	
+	i2c.wasIRQ();
+	screen->loop();	
 	delay(90);
 }
 

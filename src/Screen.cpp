@@ -80,3 +80,7 @@ void Screen::loop()
 	  ui->update();
 }
 
+void Screen::updateDataFromBaCh(const String & status) {
+	batStatus = status;
+}
+

@@ -2,6 +2,8 @@
 
 #include "SSD1306.h"
 #include "OLEDDisplayUi.h"
+#include "Observer.h"
+
 #define I2C_SDA             21
 #define I2C_SCL             22
 
@@ -9,24 +11,26 @@
 #define ENABLE_SSD1306
 
 
-class Screen {
+class Screen : public Observer {
 
 	SSD1306 *oled;
 
 	OLEDDisplayUi *ui;
 
 	static void msOverlay(OLEDDisplay *display, OLEDDisplayUiState *state);
-public:
 
 	static String batStatus;
-
+	
+public:
 	Screen();
 
-	void init();
+	void init() override;
 	
-	void loop();
+	void loop() override;
 
 	static void drawFrame2(OLEDDisplay *display, OLEDDisplayUiState *state, int16_t x, int16_t y);
 
 	static void drawFrame3(OLEDDisplay *display, OLEDDisplayUiState *state, int16_t x, int16_t y);
+
+	void updateDataFromBaCh(const String & status) override;
 };

@@ -1,7 +1,8 @@
 #include "I2C.h"
 #include "Screen.h"
  
-extern Screen screen;
+extern std::shared_ptr<Observer> screen;
+
 I2C::I2C() {
 	Wire.begin(I2C_SDA, I2C_SCL);
 }
@@ -36,14 +37,25 @@ void I2C::scanDevices() {
 		        Serial.println(addr, HEX);
 		}
     	}
+	
+	if (axp192_found) {
+		readChStatus();
+		addObserver(screen);
+	}
+
         if (nDevices == 0)
             Serial.println("No I2C devices found\n");
         else
             Serial.println("done\n");
 }
 
-void I2C::ss() {
+void I2C::wasIRQ() {
     if (axp192_found && pmu_irq) {
+	readChStatus();
+    }
+}
+
+void I2C::readChStatus() {
         pmu_irq = false;
 	axp.readIRQ();
         if (axp.isChargingIRQ()) {
@@ -54,15 +66,14 @@ void I2C::ss() {
         if (axp.isVbusRemoveIRQ()) {
             baChStatus = "No Charging";
         }
-	screen.batStatus = baChStatus;
+	notifyObservers(baChStatus);
         digitalWrite(2, !digitalRead(2));
         axp.clearIRQ();
-    }
 }
 
 bool I2C::pmu_irq = false;
 
-void I2C::s() {
+void I2C::setWasIRQ() {
 	pmu_irq = true;
 }
 
@@ -103,15 +114,14 @@ void I2C::setAxp192() {
 
 
         pinMode(PMU_IRQ, INPUT_PULLUP);
-	attachInterrupt(PMU_IRQ, s , FALLING);
+	attachInterrupt(PMU_IRQ, setWasIRQ , FALLING);
 
         axp.adc1Enable(AXP202_BATT_CUR_ADC1, 1);
         axp.enableIRQ(AXP202_VBUS_REMOVED_IRQ | AXP202_VBUS_CONNECT_IRQ | AXP202_BATT_REMOVED_IRQ | AXP202_BATT_CONNECT_IRQ, 1);
         axp.clearIRQ();
 
-        if (axp.isChargeing()) {
-            baChStatus = "Charging";
-        }
+	readChStatus();
+
     } else {
         Serial.println("AXP192 not found");
     }
