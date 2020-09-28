@@ -8,8 +8,7 @@
 
 
 
-
-class I2C : public SubjectBaCh {
+class I2C : public Subject {
 
 	AXP20X_Class axp;
 
@@ -20,6 +19,7 @@ class I2C : public SubjectBaCh {
 	static	bool pmu_irq;
 
 	String baChStatus;
+
 public:
 	bool ssd1306_found = false;
 	

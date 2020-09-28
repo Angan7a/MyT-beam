@@ -33,4 +33,6 @@ public:
 	static void drawFrame3(OLEDDisplay *display, OLEDDisplayUiState *state, int16_t x, int16_t y);
 
 	void updateDataFromBaCh(const String & status) override;
+
+	void nextFrame() override;
 };

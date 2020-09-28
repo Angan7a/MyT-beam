@@ -10,16 +10,21 @@ public:
 	virtual void updateDataFromBaCh(const String & status) = 0;
 	virtual void init() = 0;
 	virtual void loop() = 0;  
+	virtual void nextFrame() = 0;
 };
 
-class SubjectBaCh {
+class Subject {
 
-	std::vector < std::shared_ptr<Observer> > views;
+static 	std::vector < std::shared_ptr<Observer> > views;
 
 public:
 
+	virtual void init() {}
+
+	virtual void button_loop() {}
+
 	void addObserver(std::shared_ptr<Observer> obs);
 
-	void notifyObservers(const String & status);
+	static	void notifyObservers(const String & status = "1");
 };
 

@@ -1,5 +1,5 @@
 #include "Screen.h"
-#define ARRARY_SIZE(a)   (sizeof(a) / sizeof(a[0]))
+#include "config.h"
 
 Screen::Screen() {
 	oled = new SSD1306(SSD1306_ADDRESS, I2C_SDA, I2C_SCL);
@@ -76,11 +76,14 @@ void Screen::drawFrame3(OLEDDisplay *display, OLEDDisplayUiState *state, int16_t
 
 void Screen::loop()
 {
-	ui->nextFrame();
 	  ui->update();
 }
 
 void Screen::updateDataFromBaCh(const String & status) {
-	batStatus = status;
+		batStatus = status;
+}
+
+void Screen::nextFrame() {
+	ui->nextFrame();
 }
 
