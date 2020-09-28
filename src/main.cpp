@@ -7,6 +7,9 @@
 #include "axp20x.h"
 #include "config.h"
 #include "I2C.h"
+#include <OneButton.h>
+
+OneButton userButton =  OneButton(38, true, true);
 
 I2C i2c{};
 
@@ -17,6 +20,12 @@ bool axp192_found = false;
 //#define AXP192_SLAVE_ADDRESS    0x34
 
 
+void userButtonPressed()
+{
+		screen->nextFrame();
+}
+
+
 void setup() {
 	Serial.begin(115200);
 	delay(1000);
@@ -24,10 +33,12 @@ void setup() {
 	i2c.scanDevices();
 	i2c.setAxp192();
 	screen->init();
+	userButton.attachClick(userButtonPressed);
 }
 void loop() {
 	i2c.wasIRQ();
-	screen->loop();	
-	delay(90);
+	screen->loop();
+	userButton.tick();	
+	delay(9);
 }
 
