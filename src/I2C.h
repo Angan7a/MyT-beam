@@ -9,7 +9,7 @@
 
 
 
-class I2C : public SubjectBaCh {
+class I2C : public SubjectForObserv {
 
 	AXP20X_Class axp;
 

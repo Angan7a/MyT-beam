@@ -7,19 +7,33 @@
 class Observer {
 
 public:
-	virtual void updateDataFromBaCh(const String & status) = 0;
+	virtual void updateDataFromSubject(const String & status) = 0;
+
 	virtual void init() = 0;
+
 	virtual void loop() = 0;  
+
 };
 
-class SubjectBaCh {
 
-	std::vector < std::shared_ptr<Observer> > views;
+class SubjectForObserv {
+
+protected:
+
+	static std::vector < std::shared_ptr<Observer> > views;
 
 public:
 
-	void addObserver(std::shared_ptr<Observer> obs);
+	static void addObserver(std::shared_ptr<Observer> obs);
 
-	void notifyObservers(const String & status);
+	static void notifyObservers(const String & status = "");
+
+	virtual void scanDevices() {}
+
+	virtual void setAxp192() {}
+	
+	virtual void wasIRQ() {}
+
+	virtual void loop() {}
 };
 

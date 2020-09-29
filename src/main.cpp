@@ -7,11 +7,12 @@
 #include "axp20x.h"
 #include "config.h"
 #include "I2C.h"
-#include <OneButton.h>
+#include "Button.h"
 
-OneButton userButton =  OneButton(38, true, true);
+//OneButton userButton =  OneButton(38, true, true);
 
-I2C i2c{};
+std::shared_ptr<SubjectForObserv> i2c = std::make_shared<I2C> ();
+std::shared_ptr<SubjectForObserv> button = std::make_shared<Button> (38);
 
 std::shared_ptr<Observer> screen = std::make_shared<Screen> ();
 
@@ -22,7 +23,7 @@ bool axp192_found = false;
 
 void userButtonPressed()
 {
-		screen->nextFrame();
+	//	screen->nextFrame();
 }
 
 
@@ -30,15 +31,14 @@ void setup() {
 	Serial.begin(115200);
 	delay(1000);
 
-	i2c.scanDevices();
-	i2c.setAxp192();
+	i2c->scanDevices();
+	i2c->setAxp192();
 	screen->init();
-	userButton.attachClick(userButtonPressed);
 }
 void loop() {
-	i2c.wasIRQ();
+	i2c->wasIRQ();
 	screen->loop();
-	userButton.tick();	
+	button->loop();
 	delay(9);
 }
 

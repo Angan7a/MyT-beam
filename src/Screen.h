@@ -13,9 +13,9 @@
 
 class Screen : public Observer {
 
-	SSD1306 *oled;
+	SSD1306 * oled;
 
-	OLEDDisplayUi *ui;
+	OLEDDisplayUi * ui;
 
 	static void msOverlay(OLEDDisplay *display, OLEDDisplayUiState *state);
 
@@ -32,5 +32,6 @@ public:
 
 	static void drawFrame3(OLEDDisplay *display, OLEDDisplayUiState *state, int16_t x, int16_t y);
 
-	void updateDataFromBaCh(const String & status) override;
+	void updateDataFromSubject(const String & status) override;
+
 };

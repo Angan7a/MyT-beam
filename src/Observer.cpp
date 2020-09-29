@@ -1,15 +1,16 @@
 #include "Observer.h"
 
-void SubjectBaCh::addObserver(std::shared_ptr<Observer> obs) {
+std::vector<std::shared_ptr<Observer>> SubjectForObserv::views;
+
+void SubjectForObserv::addObserver(std::shared_ptr<Observer> obs) {
 
 	views.push_back(obs);
-
 }
 
-void SubjectBaCh::notifyObservers(const String & status) {
+void SubjectForObserv::notifyObservers(const String & status) {
 
 	for (auto observer : views) {
-		observer->updateDataFromBaCh(status);
+		observer->updateDataFromSubject(status);
 	}
-
 }
+
