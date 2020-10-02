@@ -6,6 +6,7 @@
 #include "Observer.h"
 #include <Arduino.h>
 #include <TinyGPS++.h>
+#include "PacketGPS.h"
 
 class GPS : public SubjectGPS {
 	SFE_UBLOX_GPS myGPS;
@@ -17,6 +18,8 @@ class GPS : public SubjectGPS {
 	char buff[5][256];
 	
 	uint64_t gpsSec = 0;
+
+	PacketGPS * packetGPS;
 
 public:
 	GPS();

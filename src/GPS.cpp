@@ -2,6 +2,7 @@
 
 GPS::GPS() {
 	gps = new TinyGPSPlus();
+	packetGPS = new PacketGPS();
         Serial.printf("\nExten: \n");
 	delay(100);
 	Serial.println("All comms started888888888888888888888888888888888888888888");
@@ -57,6 +58,13 @@ int out = 0;
             }
         } else {
             if (millis() - gpsMap > 1000) {
+		    packetGPS->h = gps->time.hour();
+		    packetGPS->m = gps->time.minute();
+		    packetGPS->s = gps->time.second();
+		    packetGPS->lng = gps->location.lng();
+		    packetGPS->lat = gps->location.lat();
+		    packetGPS->numSat = gps->satellites.value();
+
                 snprintf(buff[0], sizeof(buff[0]), "UTC:%d:%d:%d", gps->time.hour(), gps->time.minute(), gps->time.second());
                 snprintf(buff[1], sizeof(buff[1]), "LNG:%.4f", gps->location.lng());
                 snprintf(buff[2], sizeof(buff[2]), "LAT:%.4f", gps->location.lat());
@@ -71,7 +79,7 @@ int out = 0;
 	out = gps->satellites.value();
             }
         }
-	notifyObserversGPS(String(out));
+	notifyObserversGPS( * packetGPS);
 
 }
 

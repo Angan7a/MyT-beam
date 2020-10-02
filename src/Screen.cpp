@@ -57,14 +57,17 @@ void Screen::msOverlay(OLEDDisplay *display, OLEDDisplayUiState *state)
   //  }
 }
 
-String Screen::numSat = "e";
+String Screen::GPS_line1 = "e";
+String Screen::GPS_line2 = "e";
+String Screen::GPS_line3 = "e";
 
 void Screen::drawFrame2(OLEDDisplay *display, OLEDDisplayUiState *state, int16_t x, int16_t y)
 {
     display->setFont(ArialMT_Plain_10);
     display->setTextAlignment(TEXT_ALIGN_CENTER);
-    display->drawString(64 + x, 11 + y, "Num Sat GPS:");
-    display->drawString(64 + x, 22 + y, numSat);
+    display->drawString(64 + x, 11 + y, GPS_line1);
+    display->drawString(64 + x, 22 + y, GPS_line2);
+    display->drawString(64 + x, 33 + y, GPS_line3);
 }
 
 void Screen::drawFrame3(OLEDDisplay *display, OLEDDisplayUiState *state, int16_t x, int16_t y)
@@ -81,8 +84,10 @@ void Screen::loop()
 	  ui->update();
 }
 
-void Screen::updateDataFromSubjectGPS(const String & status) {
-		numSat = status;
+void Screen::updateDataFromSubjectGPS(const PacketGPS & packetGPS) {
+		GPS_line1 = "Num Sat: " + String(packetGPS.numSat);
+		GPS_line2 = packetGPS.numSat ? ("Lng: " + String(packetGPS.lng) + ", Lat: " + String(packetGPS.lat)) : "";
+		GPS_line3 = packetGPS.numSat ? (String(packetGPS.h + 2) + ":" + String(packetGPS.m) + ":" + String(packetGPS.s) + ":") : "";
 }
 
 void Screen::updateDataFromSubjectBatCh(const String & status) {

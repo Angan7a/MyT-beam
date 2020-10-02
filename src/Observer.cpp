@@ -30,9 +30,9 @@ void SubjectForObserv::notifyObserversButton() {
 	}
 }
 
-void SubjectGPS::notifyObserversGPS(const String & status) {
+void SubjectGPS::notifyObserversGPS(const PacketGPS & packetGPS) {
 
 	for (auto observer : views) {
-		observer->updateDataFromSubjectGPS(status);
+		observer->updateDataFromSubjectGPS(packetGPS);
 	}
 }

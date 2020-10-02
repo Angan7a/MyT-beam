@@ -3,6 +3,7 @@
 #include "SSD1306.h"
 #include "OLEDDisplayUi.h"
 #include "Observer.h"
+#include "PacketGPS.h"
 
 #define I2C_SDA             21
 #define I2C_SCL             22
@@ -21,7 +22,11 @@ class Screen : public Observer {
 
 	static String batStatus;
 
-	static String numSat;
+	static String GPS_line1;
+
+	static String GPS_line2;
+
+	static String GPS_line3;
 	
 public:
 	Screen();
@@ -36,7 +41,7 @@ public:
 
 	void updateDataFromSubjectBatCh(const String & status) override;
 
-	void updateDataFromSubjectGPS(const String & status) override;
+	void updateDataFromSubjectGPS(const PacketGPS & packetGPS) override;
 
 	void updateDataFromSubjectButton() override; 
 

@@ -3,11 +3,12 @@
 #include <vector>
 #include <memory>
 #include <WString.h>
+#include "PacketGPS.h"
 
 class Observer {
 
 public:
-	virtual void updateDataFromSubjectGPS(const String & status) {}
+	virtual void updateDataFromSubjectGPS(const PacketGPS & packetGPS) {}
 	
 	virtual void updateDataFromSubjectBatCh(const String & status) {}
 
@@ -42,6 +43,8 @@ public:
 	virtual void notifyObserversBatCh(const String & status) {}
 
 	static void notifyObserversButton(); //it is not the best solution ...
+	
+	void notifyObserversGPS(const PacketGPS & packetGPS);
 
 	virtual ~SubjectForObserv() {}
 };
@@ -57,7 +60,7 @@ public:
 class SubjectGPS : public SubjectForObserv {
 public:
 
-	void notifyObserversGPS(const String & status);
+	void notifyObserversGPS(const PacketGPS & packetGPS);
 
 };	
 
