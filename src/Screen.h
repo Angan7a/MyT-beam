@@ -20,6 +20,8 @@ class Screen : public Observer {
 	static void msOverlay(OLEDDisplay *display, OLEDDisplayUiState *state);
 
 	static String batStatus;
+
+	static String numSat;
 	
 public:
 	Screen();
@@ -32,6 +34,10 @@ public:
 
 	static void drawFrame3(OLEDDisplay *display, OLEDDisplayUiState *state, int16_t x, int16_t y);
 
-	void updateDataFromSubject(const String & status) override;
+	void updateDataFromSubjectBatCh(const String & status) override;
+
+	void updateDataFromSubjectGPS(const String & status) override;
+
+	void updateDataFromSubjectButton() override; 
 
 };

@@ -53,6 +53,7 @@ void I2C::wasIRQ() {
     if (axp192_found && pmu_irq) {
 	readChStatus();
     }
+     gpsP->loop();
 }
 
 void I2C::readChStatus() {
@@ -66,7 +67,7 @@ void I2C::readChStatus() {
         if (axp.isVbusRemoveIRQ()) {
             baChStatus = "No Charging";
         }
-	notifyObservers(baChStatus);
+	notifyObserversBatCh(baChStatus);
         digitalWrite(2, !digitalRead(2));
         axp.clearIRQ();
 }
@@ -96,11 +97,13 @@ void I2C::setAxp192() {
 
         Serial.println("----------------------------------------");
 
+axp.setPowerOutPut(AXP192_LDO3, AXP202_ON); // GPS main power
         axp.setPowerOutPut(AXP192_LDO2, AXP202_ON);
         axp.setPowerOutPut(AXP192_LDO3, AXP202_ON);
         axp.setPowerOutPut(AXP192_DCDC2, AXP202_ON);
         axp.setPowerOutPut(AXP192_EXTEN, AXP202_ON);
         axp.setPowerOutPut(AXP192_DCDC1, AXP202_ON);
+axp.setPowerOutPut(AXP192_DCDC3, AXP202_ON);
         axp.setDCDC1Voltage(3300);  //esp32 core VDD    3v3
         axp.setLDO2Voltage(3300);   //LORA VDD set 3v3
         axp.setLDO3Voltage(3300);   //GPS VDD      3v3
@@ -125,7 +128,8 @@ void I2C::setAxp192() {
     } else {
         Serial.println("AXP192 not found");
     }
-
+	gpsP = std::make_shared<GPS> ();
+	gpsP->addObserver(screen);
 }
 
 

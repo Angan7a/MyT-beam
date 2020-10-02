@@ -5,11 +5,13 @@
 #include "axp20x.h"
 #include "config.h"
 #include "Observer.h"
+#include "GPS.h"
+#include <memory>
 
 
 
 
-class I2C : public SubjectForObserv {
+class I2C : public SubjectBatCh {
 
 	AXP20X_Class axp;
 
@@ -20,6 +22,8 @@ class I2C : public SubjectForObserv {
 	static	bool pmu_irq;
 
 	String baChStatus;
+
+	std::shared_ptr<SubjectForObserv> gpsP;
 public:
 	bool ssd1306_found = false;
 	

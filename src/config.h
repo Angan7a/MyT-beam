@@ -6,3 +6,5 @@
 
 #define SSD1306_ADDRESS         0x3C
 //#define AXP192_SLAVE_ADDRESS    0x34
+#define GPS_RX_PIN      34
+#define GPS_TX_PIN      12

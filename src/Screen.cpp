@@ -57,12 +57,14 @@ void Screen::msOverlay(OLEDDisplay *display, OLEDDisplayUiState *state)
   //  }
 }
 
+String Screen::numSat = "e";
+
 void Screen::drawFrame2(OLEDDisplay *display, OLEDDisplayUiState *state, int16_t x, int16_t y)
 {
     display->setFont(ArialMT_Plain_10);
     display->setTextAlignment(TEXT_ALIGN_CENTER);
-    display->drawString(64 + x, 11 + y, "buff[0]");
-    display->drawString(64 + x, 22 + y, "buff[1]");
+    display->drawString(64 + x, 11 + y, "Num Sat GPS:");
+    display->drawString(64 + x, 22 + y, numSat);
 }
 
 void Screen::drawFrame3(OLEDDisplay *display, OLEDDisplayUiState *state, int16_t x, int16_t y)
@@ -79,13 +81,15 @@ void Screen::loop()
 	  ui->update();
 }
 
-void Screen::updateDataFromSubject(const String & status) {
+void Screen::updateDataFromSubjectGPS(const String & status) {
+		numSat = status;
+}
 
-	if (status == ""){
-		ui->nextFrame();
-	} else {
+void Screen::updateDataFromSubjectBatCh(const String & status) {
 		batStatus = status;
-	}
+}
 
+void Screen::updateDataFromSubjectButton() {
+		ui->nextFrame();
 }
 
