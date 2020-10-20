@@ -86,8 +86,8 @@ void Screen::loop()
 
 void Screen::updateDataFromSubjectGPS(const PacketGPS & packetGPS) {
 		GPS_line1 = "Num Sat: " + String(packetGPS.numSat);
-		GPS_line2 = packetGPS.numSat ? ("Lng: " + String(packetGPS.lng) + ", Lat: " + String(packetGPS.lat)) : "";
-		GPS_line3 = packetGPS.numSat ? (String(packetGPS.h + 2) + ":" + String(packetGPS.m) + ":" + String(packetGPS.s) + ":") : "";
+		GPS_line2 = packetGPS.numSat ? ("Lng: " + String(packetGPS.lng, 6) + ", Lat: " + String(packetGPS.lat, 6)) : "";
+		GPS_line3 = packetGPS.numSat ? (String(packetGPS.h + 2) + ":" + String(packetGPS.m) + ":" + String(packetGPS.s)) : "";
 }
 
 void Screen::updateDataFromSubjectBatCh(const String & status) {
