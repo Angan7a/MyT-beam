@@ -53,17 +53,17 @@ void setup() {
 	i2c->scanDevices();
 	i2c->setAxp192();
 	screen->init();
-button->addObserver(screen);
+//button->addObserver(screen);
     lora.init();
     lora.SX1276::setDio0Action(ssetFlag);
 }
 void loop() {
-lora.send();
-//lora.received();
+//lora.send();
+lora.received();
 //	Serial.println(" w main");
-//	i2c->wasIRQ();
-//	screen->loop();
-//	button->loop();
-	delay(5000);
+	i2c->wasIRQ();
+	screen->loop();
+	button->loop();
+	delay(500);
 }
 

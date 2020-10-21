@@ -1,11 +1,16 @@
 #include "Lora.h"
+#include "Screen.h"
 
 Lora * Lora::instance;
 
+extern std::shared_ptr<Observer> screen;
 
 Lora::Lora() : SX1276(new Module(LORA_SS, LORA_DI0, LORA_RST, LORA_BUSY)) {
 
 	instance = this;
+
+	addObserver(screen);
+
 }
 
 	 volatile bool Lora::enableInterrupt = true;
@@ -108,7 +113,7 @@ void Lora::send() {
                 // enable interrupt service routine
                 enableInterrupt = true;
             }
-            snprintf(buff[1], sizeof(buff[1]), "Send %u", loraMap);
+            snprintf(buff[1], sizeof(buff[1]), "Send %f", loraMap);
             loraMap += 4.3 ; //millis();
             //if (!ssd1306_found) {
                 Serial.println(buff[1]);
@@ -160,6 +165,7 @@ void Lora::received() {
                 Serial.print(getRSSI());
                 Serial.println(F(" dBm"));
                 snprintf(buff[1], sizeof(buff[1]), "rssi:%.2f dBm", getRSSI());
+		notifyObserversLora(recv, getRSSI());
 
                 // print SNR (Signal-to-Noise Ratio)
                 Serial.print(F("[RADIO] SNR:\t\t"));

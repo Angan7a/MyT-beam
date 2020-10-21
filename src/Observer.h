@@ -12,6 +12,8 @@ public:
 	
 	virtual void updateDataFromSubjectBatCh(const String & status) {}
 
+	virtual void updateDataFromSubjectLora(const String & message, double rssi) {}
+
 	virtual void updateDataFromSubjectButton() {}
 
 	virtual void init() = 0;
@@ -42,9 +44,11 @@ public:
 
 	virtual void notifyObserversBatCh(const String & status) {}
 
-	static void notifyObserversButton(); //it is not the best solution ...
+	static void notifyObserversButton();
 	
-	void notifyObserversGPS(const PacketGPS & packetGPS);
+	virtual void notifyObserversGPS(const PacketGPS & packetGPS) {}
+
+	virtual void notifyObserversLora(const String & message, double rssi) {}
 
 	virtual ~SubjectForObserv() {}
 };
@@ -65,4 +69,11 @@ public:
 };	
 
 class SubjectButton : public SubjectForObserv {
+};	
+
+class SubjectLora : public SubjectForObserv {
+public:
+
+	void notifyObserversLora(const String & messagei, double rssi);
+
 };	

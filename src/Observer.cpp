@@ -36,3 +36,10 @@ void SubjectGPS::notifyObserversGPS(const PacketGPS & packetGPS) {
 		observer->updateDataFromSubjectGPS(packetGPS);
 	}
 }
+
+void SubjectLora::notifyObserversLora(const String & message, double rssi) {
+
+	for (auto observer : views) {
+		observer->updateDataFromSubjectLora(message, rssi);
+	}
+}

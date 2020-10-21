@@ -29,7 +29,7 @@ void Screen::init()
 //    ui->setFrames(frames, ARRARY_SIZE(frames));
 //    if (axp192_found) {
 	static    OverlayCallback overlays[] = { msOverlay };
-	static    FrameCallback frames[] = { drawFrame2, drawFrame3};
+	static    FrameCallback frames[] = { drawFrame4, drawFrame3, drawFrame2};
         ui->setFrames(frames, ARRARY_SIZE(frames));
         ui->setOverlays(overlays, ARRARY_SIZE(overlays));
   //  }
@@ -79,6 +79,15 @@ void Screen::drawFrame3(OLEDDisplay *display, OLEDDisplayUiState *state, int16_t
     display->drawString(64 + x, 35 + y, "buff[1]");
 }
 
+void Screen::drawFrame4(OLEDDisplay *display, OLEDDisplayUiState *state, int16_t x, int16_t y)
+{
+    display->setFont(ArialMT_Plain_10);
+    display->setTextAlignment(TEXT_ALIGN_CENTER);
+    display->drawString(64 + x, 11 + y, lora_line0);
+    display->drawString(64 + x, 22 + y, lora_line1);
+ //   display->drawString(64 + x, 33 + y, GPS_line3);
+}
+
 void Screen::loop()
 {
 	  ui->update();
@@ -98,3 +107,11 @@ void Screen::updateDataFromSubjectButton() {
 		ui->nextFrame();
 }
 
+String Screen::lora_line0 = "e";
+String Screen::lora_line1 = "e";
+
+void Screen::updateDataFromSubjectLora(const String & message, double rssi) {
+
+		lora_line0 = "Lora received: " + message;
+		lora_line1 = "RSSI: " + String(rssi, 2);
+}

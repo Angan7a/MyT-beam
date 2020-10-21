@@ -27,6 +27,10 @@ class Screen : public Observer {
 	static String GPS_line2;
 
 	static String GPS_line3;
+
+	static String lora_line0;
+
+	static String lora_line1;
 	
 public:
 	Screen();
@@ -39,10 +43,14 @@ public:
 
 	static void drawFrame3(OLEDDisplay *display, OLEDDisplayUiState *state, int16_t x, int16_t y);
 
+	static void drawFrame4(OLEDDisplay *display, OLEDDisplayUiState *state, int16_t x, int16_t y);
+
 	void updateDataFromSubjectBatCh(const String & status) override;
 
 	void updateDataFromSubjectGPS(const PacketGPS & packetGPS) override;
 
 	void updateDataFromSubjectButton() override; 
+
+	void updateDataFromSubjectLora(const String & message, double rssi) override;
 
 };

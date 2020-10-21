@@ -3,8 +3,9 @@
 #include <memory>
 #include "board_def.h"
 #include "Arduino.h"
+#include "Observer.h"
 
-class Lora : public SX1276 {
+class Lora : public SX1276, public SubjectLora {
 public:
 	static Lora * instance;
 
