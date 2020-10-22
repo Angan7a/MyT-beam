@@ -23,8 +23,9 @@ class I2C : public SubjectBatCh {
 
 	String baChStatus;
 
-	std::shared_ptr<SubjectForObserv> gpsP;
 public:
+	std::shared_ptr<ObserverAndSubject> gpsP;
+
 	bool ssd1306_found = false;
 	
 	bool axp192_found = false;

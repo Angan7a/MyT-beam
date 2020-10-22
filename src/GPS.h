@@ -8,7 +8,7 @@
 #include <TinyGPS++.h>
 #include "PacketGPS.h"
 
-class GPS : public SubjectGPS {
+class GPS : public SubjectGPS, public Observer {
 	SFE_UBLOX_GPS myGPS;
 
 	HardwareSerial SerialGPS{1};

@@ -13,4 +13,7 @@ public:
 	PacketGPS(int hh = 0, int mm = 0, int ss = 0,
 			double lngG = 0, double latG = 0, int numSatG = 0);
 
+	double getLng() const;
+
+	double getLat() const;
 };

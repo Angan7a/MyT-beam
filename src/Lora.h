@@ -23,9 +23,13 @@ public:
 
 	static void setFlag(void);
 
-	void send();
+	void send(const String & message);
 
 	void received();
+
+	void loop() {}
 	
 	void init();
+
+	void updateDataFromSubjectGPS(const PacketGPS & packetGPS) override;
 };

@@ -1,4 +1,7 @@
 #include "GPS.h"
+#include "Lora.h"
+
+extern std::shared_ptr<ObserverAndSubject> lora;
 
 GPS::GPS() {
 	gps = new TinyGPSPlus();
@@ -29,6 +32,8 @@ GPS::GPS() {
         delay(1000);
 	i++;
 	  } while(i < 3);
+
+	//addObserver(lora);
 }
 
 void GPS::init() {}

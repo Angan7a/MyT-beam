@@ -5,6 +5,8 @@ Lora * Lora::instance;
 
 extern std::shared_ptr<Observer> screen;
 
+//extern std::shared_ptr<Observer> lora;
+
 Lora::Lora() : SX1276(new Module(LORA_SS, LORA_DI0, LORA_RST, LORA_BUSY)) {
 
 	instance = this;
@@ -56,10 +58,11 @@ void Lora::init() {
                     Serial.println(state);
                     while (true);
                 }
+		SX1276::setDio0Action(setFlag);
 }
 
 
-void Lora::send() {
+void Lora::send(const String & message) {
         snprintf(buff[0], sizeof(buff[0]), "T-Beam Lora Sender");
         if (!loraBeginOK) {
             snprintf(buff[1], sizeof(buff[1]), "Lora Begin FAIL");
@@ -69,11 +72,11 @@ void Lora::send() {
             return;
         }
         //static uint32_t loraMap = 0;
-        static double loraMap = 20.1234;
+  //      static double loraMap = 20.1234;
 
-        if (millis() - loraMap > 3000) {
+  //      if (millis() - loraMap > 3000) {
             int transmissionState = ERR_NONE;
-            transmissionState = startTransmit(String(loraMap, 2).c_str());
+            transmissionState = startTransmit(message.c_str());
             // check if the previous transmission finished
             if (receivedFlag) {
                 // disable the interrupt service routine while
@@ -96,11 +99,11 @@ void Lora::send() {
                 // delay(1000);
 
                 // send another one
-                Serial.print(F("[RADIO] Sending another packet ... "));
+//                Serial.print(F("[RADIO] Sending another packet ... "));
 
                 // you can transmit C-string or Arduino string up to
                 // 256 characters long
-                transmissionState = startTransmit(String(loraMap, 2).c_str());
+//                transmissionState = startTransmit(String(loraMap, 2).c_str());
 
                 // you can also transmit byte array up to 256 bytes long
                 /*
@@ -112,12 +115,12 @@ void Lora::send() {
                 // we're ready to send more packets,
                 // enable interrupt service routine
                 enableInterrupt = true;
-            }
-            snprintf(buff[1], sizeof(buff[1]), "Send %f", loraMap);
-            loraMap += 4.3 ; //millis();
+  //          }
+   //         snprintf(buff[1], sizeof(buff[1]), "Send %f", loraMap);
+   //         loraMap += 4.3 ; //millis();
             //if (!ssd1306_found) {
-                Serial.println(buff[1]);
-           // }
+       //         Serial.println(buff[1]);
+     //      // }
         }
 
 }
@@ -164,8 +167,9 @@ void Lora::received() {
                 Serial.print(F("[RADIO] RSSI:\t\t"));
                 Serial.print(getRSSI());
                 Serial.println(F(" dBm"));
-                snprintf(buff[1], sizeof(buff[1]), "rssi:%.2f dBm", getRSSI());
-		notifyObserversLora(recv, getRSSI());
+		double r = getRSSI();
+                snprintf(buff[1], sizeof(buff[1]), "rssi:%.2f dBm", r);
+		notifyObserversLora(recv, r);
 
                 // print SNR (Signal-to-Noise Ratio)
                 Serial.print(F("[RADIO] SNR:\t\t"));
@@ -177,7 +181,7 @@ void Lora::received() {
                 Serial.println(F("CRC error!"));
 
             } else {
-                // some other error occurred
+               // some other error occurred
                 Serial.print(F("failed, code "));
                 Serial.println(state);
 
@@ -192,4 +196,9 @@ void Lora::received() {
         }
 
 	
+}
+
+void Lora::updateDataFromSubjectGPS(const PacketGPS & packetGPS) {
+	String gps_data = "Lat:" + String(packetGPS.getLat(),6) + "Lng:" + String(packetGPS.getLng(),6);
+	send(gps_data);
 }

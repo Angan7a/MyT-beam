@@ -111,7 +111,7 @@ String Screen::lora_line0 = "e";
 String Screen::lora_line1 = "e";
 
 void Screen::updateDataFromSubjectLora(const String & message, double rssi) {
-
+	Serial.println("In lora");
 		lora_line0 = "Lora received: " + message;
 		lora_line1 = "RSSI: " + String(rssi, 2);
 }

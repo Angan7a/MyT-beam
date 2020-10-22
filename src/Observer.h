@@ -5,7 +5,33 @@
 #include <WString.h>
 #include "PacketGPS.h"
 
-class Observer {
+class Observer;
+
+class ObserverAndSubject {
+public:
+	virtual void updateDataFromSubjectGPS(const PacketGPS & packetGPS) {}
+	
+	virtual void updateDataFromSubjectBatCh(const String & status) {}
+
+	virtual void updateDataFromSubjectLora(const String & message, double rssi) {}
+
+	virtual void updateDataFromSubjectButton() {}
+
+	virtual void init() {}
+
+	virtual void loop() {}  
+
+	virtual void received() {}
+
+	virtual void send(const String & message) {}
+
+	virtual void addObserver(std::shared_ptr<ObserverAndSubject> obs) {}
+
+	virtual ~ObserverAndSubject() {}
+
+};
+//============================================================================
+class Observer : virtual public ObserverAndSubject {
 
 public:
 	virtual void updateDataFromSubjectGPS(const PacketGPS & packetGPS) {}
@@ -20,19 +46,25 @@ public:
 
 	virtual void loop() = 0;  
 
+	virtual void received() {}
+
+	virtual void send(const String & message) {}
+
 	virtual ~Observer() {}
 };
 
-
-class SubjectForObserv {
+//============================================================================
+class SubjectForObserv : virtual public ObserverAndSubject{
 
 protected:
 
-	static std::vector < std::shared_ptr<Observer> > views;
+	//static std::vector < std::shared_ptr<Observer> > views;
+	std::vector < std::shared_ptr<ObserverAndSubject> > views;
 	
 public:
 
-	static void addObserver(std::shared_ptr<Observer> obs);
+	//static void addObserver(std::shared_ptr<Observer> obs);
+	void addObserver(std::shared_ptr<ObserverAndSubject> obs);
 
 	virtual void scanDevices() {}
 
@@ -44,7 +76,7 @@ public:
 
 	virtual void notifyObserversBatCh(const String & status) {}
 
-	static void notifyObserversButton();
+	void notifyObserversButton();
 	
 	virtual void notifyObserversGPS(const PacketGPS & packetGPS) {}
 
@@ -54,6 +86,7 @@ public:
 };
 
 
+//============================================================================
 class SubjectBatCh : public SubjectForObserv {
 public:
 
@@ -61,6 +94,7 @@ public:
 
 };	
 
+//============================================================================
 class SubjectGPS : public SubjectForObserv {
 public:
 
@@ -68,12 +102,13 @@ public:
 
 };	
 
+//============================================================================
 class SubjectButton : public SubjectForObserv {
 };	
 
+//============================================================================
 class SubjectLora : public SubjectForObserv {
 public:
 
-	void notifyObserversLora(const String & messagei, double rssi);
-
+	void notifyObserversLora(const String & message, double rssi);
 };	

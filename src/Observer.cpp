@@ -1,8 +1,8 @@
 #include "Observer.h"
 
-std::vector<std::shared_ptr<Observer>> SubjectForObserv::views;
+//std::vector<std::shared_ptr<Observer>> SubjectForObserv::views;
 
-void SubjectForObserv::addObserver(std::shared_ptr<Observer> obs) {
+void SubjectForObserv::addObserver(std::shared_ptr<ObserverAndSubject> obs) {
 
 	views.push_back(obs);
 }

@@ -11,7 +11,7 @@ Button::Button(int pin) {
 }
 
 void Button::userButtonPressed() {
-	notifyObserversButton();
+//	notifyObserversButton();
 }
 
 void Button::loop() {
