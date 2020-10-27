@@ -1,7 +1,10 @@
 #include "GPS.h"
 #include "Lora.h"
+#include <string>
 
 extern std::shared_ptr<ObserverAndSubject> lora;
+extern std::shared_ptr<Observer> screen;
+
 
 GPS::GPS() {
 	gps = new TinyGPSPlus();
@@ -33,7 +36,8 @@ GPS::GPS() {
 	i++;
 	  } while(i < 3);
 
-	//addObserver(lora);
+addObserver(lora);
+addObserver(screen);
 }
 
 void GPS::init() {}
@@ -82,9 +86,41 @@ int out = 0;
                // }
                 gpsMap = millis();
 	out = gps->satellites.value();
+		packetGPS->distFromTFO = gps->distanceBetween(packetGPS->lat, packetGPS->lng, 51.085010, 17.071220);
+	notifyObserversGPS( * packetGPS);
             }
         }
-	notifyObserversGPS( * packetGPS);
 
 }
 
+void GPS::updateDataFromSubjectLora(const String & message, double rssi) {
+	auto pos = message.indexOf("Lat:");
+		double lat;
+		double lng;
+
+	if (pos != -1) {
+		//double lat = (message.substring(pos, 8)).toDouble();
+		lat = (message.substring(pos+4, 13)).toDouble();
+		Serial.println("Recived pos GPS - lat: ");
+		Serial.println(lat,4);
+	}
+	 pos = message.indexOf("Lng:");
+	if (pos != -1) {
+		//double lat = (message.substring(pos, 8)).toDouble();
+		lng = (message.substring(pos+4, 26)).toDouble();
+		Serial.println("Recived pos GPS - lng: ");
+		Serial.println(lng, 4);
+	}
+
+	if (lat != 0 and lng != 0) {
+		if (packetGPS->lng != 0) {
+			packetGPS->distFromOtherDev = gps->distanceBetween(packetGPS->lat, packetGPS->lng, lat, lng);
+		Serial.println(packetGPS->distFromOtherDev, 4);
+		} else {
+			packetGPS->distOtherFromTFO = gps->distanceBetween(lat, lng,51.085010, 17.071220);
+		Serial.println(packetGPS->distOtherFromTFO, 4);
+		}
+			notifyObserversGPS( * packetGPS);
+	}
+
+}

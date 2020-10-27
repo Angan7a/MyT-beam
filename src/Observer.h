@@ -9,13 +9,15 @@ class Observer;
 
 class ObserverAndSubject {
 public:
-	virtual void updateDataFromSubjectGPS(const PacketGPS & packetGPS) {}
+	virtual void updateDataFromSubjectGPS(const PacketGPS & packetGPS) {} 
 	
 	virtual void updateDataFromSubjectBatCh(const String & status) {}
 
 	virtual void updateDataFromSubjectLora(const String & message, double rssi) {}
 
 	virtual void updateDataFromSubjectButton() {}
+
+	virtual std::shared_ptr<ObserverAndSubject> getGPS() {}
 
 	virtual void init() {}
 
@@ -72,7 +74,7 @@ public:
 	
 	virtual void wasIRQ() {}
 
-	virtual void loop() {}
+//	virtual void loop() {}
 
 	virtual void notifyObserversBatCh(const String & status) {}
 
@@ -95,7 +97,7 @@ public:
 };	
 
 //============================================================================
-class SubjectGPS : public SubjectForObserv {
+class SubjectGPS : public SubjectForObserv, public Observer {
 public:
 
 	void notifyObserversGPS(const PacketGPS & packetGPS);
@@ -107,7 +109,7 @@ class SubjectButton : public SubjectForObserv {
 };	
 
 //============================================================================
-class SubjectLora : public SubjectForObserv {
+class SubjectLora : public SubjectForObserv, public Observer {
 public:
 
 	void notifyObserversLora(const String & message, double rssi);

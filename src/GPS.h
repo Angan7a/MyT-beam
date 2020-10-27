@@ -8,7 +8,7 @@
 #include <TinyGPS++.h>
 #include "PacketGPS.h"
 
-class GPS : public SubjectGPS, public Observer {
+class GPS : public SubjectGPS {
 	SFE_UBLOX_GPS myGPS;
 
 	HardwareSerial SerialGPS{1};
@@ -27,5 +27,7 @@ public:
 	void init();
 
 	void loop();
+
+	void updateDataFromSubjectLora(const String & message, double rssi);
 };
 

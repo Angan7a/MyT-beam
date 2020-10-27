@@ -1,17 +1,20 @@
 #include "Lora.h"
 #include "Screen.h"
+#include "I2C.h"
 
 Lora * Lora::instance;
 
 extern std::shared_ptr<Observer> screen;
 
-//extern std::shared_ptr<Observer> lora;
+extern std::shared_ptr<SubjectForObserv> i2c;
+
 
 Lora::Lora() : SX1276(new Module(LORA_SS, LORA_DI0, LORA_RST, LORA_BUSY)) {
 
 	instance = this;
 
 	addObserver(screen);
+//	addObserver(i2c->getGPS());
 
 }
 
@@ -169,7 +172,9 @@ void Lora::received() {
                 Serial.println(F(" dBm"));
 		double r = getRSSI();
                 snprintf(buff[1], sizeof(buff[1]), "rssi:%.2f dBm", r);
-		notifyObserversLora(recv, r);
+		if (r > -150) {
+			notifyObserversLora(recv, r);
+		}
 
                 // print SNR (Signal-to-Noise Ratio)
                 Serial.print(F("[RADIO] SNR:\t\t"));
@@ -199,6 +204,7 @@ void Lora::received() {
 }
 
 void Lora::updateDataFromSubjectGPS(const PacketGPS & packetGPS) {
+                Serial.print(F("IN LORA ..........................................................................."));
 	String gps_data = "Lat:" + String(packetGPS.getLat(),6) + "Lng:" + String(packetGPS.getLng(),6);
 	send(gps_data);
 }

@@ -27,6 +27,7 @@ void setup() {
 	i2c->setAxp192();
 	screen->init();
     lora->init();
+    lora->addObserver(i2c->getGPS() );
 }
 void loop() {
 //lora->send("Lat:13.2311512Lng:12.121222");
@@ -34,6 +35,6 @@ lora->received();
 	i2c->wasIRQ();
 	screen->loop();
 	button->loop();
-	delay(500);
+	delay(5000);
 }
 

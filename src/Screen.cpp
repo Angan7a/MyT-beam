@@ -17,6 +17,7 @@ void Screen::init()
         oled->flipScreenVertically();
         oled->setFont(ArialMT_Plain_16);
         oled->setTextAlignment(TEXT_ALIGN_CENTER);
+
     } else {
         Serial.println("SSD1306 Begin FAIL");
     }
@@ -29,7 +30,7 @@ void Screen::init()
 //    ui->setFrames(frames, ARRARY_SIZE(frames));
 //    if (axp192_found) {
 	static    OverlayCallback overlays[] = { msOverlay };
-	static    FrameCallback frames[] = { drawFrame4, drawFrame3, drawFrame2};
+	static    FrameCallback frames[] = { drawFrameGPS, drawFrame3, drawFrameLora};
         ui->setFrames(frames, ARRARY_SIZE(frames));
         ui->setOverlays(overlays, ARRARY_SIZE(overlays));
   //  }
@@ -46,10 +47,10 @@ void Screen::msOverlay(OLEDDisplay *display, OLEDDisplayUiState *state)
 
     display->drawString(0, 0, batStatus);
 
-   // if (axp.isBatteryConnect()) {
-   //     snprintf(volbuffer, sizeof(volbuffer), "%.2fV/%.2fmA", axp.getBattVoltage() / 1000.0, axp.isChargeing() ? axp.getBattChargeCurrent() : axp.getBattDischargeCurrent());
-   //     display->drawString(62, 0, volbuffer);
-//    } else {
+//    if (axp.isBatteryConnect()) {
+ //      snprintf(volbuffer, sizeof(volbuffer), "%.2fV/%.2fmA", axp.getBattVoltage() / 1000.0, axp.isChargeing() ? axp.getBattChargeCurrent() : axp.getBattDischargeCurrent());
+ //       display->drawString(62, 0, volbuffer);
+  //  } else {
         multi_heap_info_t info;
         heap_caps_get_info(&info, MALLOC_CAP_INTERNAL);
         snprintf(volbuffer, sizeof(volbuffer), "%u/%uKB",  info.total_allocated_bytes / 1024, info.total_free_bytes / 1024);
@@ -60,14 +61,16 @@ void Screen::msOverlay(OLEDDisplay *display, OLEDDisplayUiState *state)
 String Screen::GPS_line1 = "e";
 String Screen::GPS_line2 = "e";
 String Screen::GPS_line3 = "e";
+String Screen::GPS_line4 = "e";
 
-void Screen::drawFrame2(OLEDDisplay *display, OLEDDisplayUiState *state, int16_t x, int16_t y)
+void Screen::drawFrameGPS(OLEDDisplay *display, OLEDDisplayUiState *state, int16_t x, int16_t y)
 {
     display->setFont(ArialMT_Plain_10);
     display->setTextAlignment(TEXT_ALIGN_CENTER);
     display->drawString(64 + x, 11 + y, GPS_line1);
     display->drawString(64 + x, 22 + y, GPS_line2);
     display->drawString(64 + x, 33 + y, GPS_line3);
+    display->drawString(64 + x, 44 + y, GPS_line4);
 }
 
 void Screen::drawFrame3(OLEDDisplay *display, OLEDDisplayUiState *state, int16_t x, int16_t y)
@@ -79,7 +82,7 @@ void Screen::drawFrame3(OLEDDisplay *display, OLEDDisplayUiState *state, int16_t
     display->drawString(64 + x, 35 + y, "buff[1]");
 }
 
-void Screen::drawFrame4(OLEDDisplay *display, OLEDDisplayUiState *state, int16_t x, int16_t y)
+void Screen::drawFrameLora(OLEDDisplay *display, OLEDDisplayUiState *state, int16_t x, int16_t y)
 {
     display->setFont(ArialMT_Plain_10);
     display->setTextAlignment(TEXT_ALIGN_CENTER);
@@ -95,8 +98,17 @@ void Screen::loop()
 
 void Screen::updateDataFromSubjectGPS(const PacketGPS & packetGPS) {
 		GPS_line1 = "Num Sat: " + String(packetGPS.numSat);
-		GPS_line2 = packetGPS.numSat ? ("Lng: " + String(packetGPS.lng, 6) + ", Lat: " + String(packetGPS.lat, 6)) : "";
-		GPS_line3 = packetGPS.numSat ? (String(packetGPS.h + 2) + ":" + String(packetGPS.m) + ":" + String(packetGPS.s)) : "";
+		GPS_line2 = packetGPS.distFromOtherDev ? ("Dist from other dev: " + String(packetGPS.distFromOtherDev, 2))  : "No info";
+
+		if (packetGPS.distFromTFO != 0) {
+			GPS_line3 = "My dist from TFO: " + String(packetGPS.distFromTFO, 2);
+		} else if (packetGPS.distOtherFromTFO != 0) {
+			GPS_line3 = "Other dist from TFO: " + String(packetGPS.distOtherFromTFO, 2); 
+		} else {
+		        GPS_line3 = "No info";
+		}
+
+		GPS_line4 = packetGPS.numSat ? (String(packetGPS.h + 2) + ":" + String(packetGPS.m) + ":" + String(packetGPS.s)) : "";
 }
 
 void Screen::updateDataFromSubjectBatCh(const String & status) {
@@ -112,6 +124,6 @@ String Screen::lora_line1 = "e";
 
 void Screen::updateDataFromSubjectLora(const String & message, double rssi) {
 	Serial.println("In lora");
-		lora_line0 = "Lora received: " + message;
+		lora_line0 = message;
 		lora_line1 = "RSSI: " + String(rssi, 2);
 }

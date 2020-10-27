@@ -132,4 +132,6 @@ axp.setPowerOutPut(AXP192_DCDC3, AXP202_ON);
 	gpsP->addObserver(screen);
 }
 
-
+std::shared_ptr<ObserverAndSubject> I2C::getGPS() {
+	return gpsP;
+}

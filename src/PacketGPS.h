@@ -10,6 +10,12 @@ public:
 	double lat;
 	int numSat;
 	
+	double distFromOtherDev = 0;
+
+	double distFromTFO = 0;
+
+	double distOtherFromTFO = 0;
+
 	PacketGPS(int hh = 0, int mm = 0, int ss = 0,
 			double lngG = 0, double latG = 0, int numSatG = 0);
 
